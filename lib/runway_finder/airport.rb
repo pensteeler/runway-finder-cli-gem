@@ -12,26 +12,24 @@ class RunwayFinder::Airport
 
     url_with_zip = ""
     url_with_zip = "https://landingfinder.com/index.php?address=#{zip_code}"
-    puts "URL:#{url_with_zip}"
-    scrape_by_zipcode( url_with_zip )
+    #puts "URL:#{url_with_zip}"
+    airports = scrape_by_zipcode( url_with_zip )
 
-    puts "These are near by"
-    airport_1 = self.new
-    airport_1.name = "O'hare"
-    airport_1.code = "ORD"
-    airport_1.distance = "8.7"
-    airport_1.url = "www.flychicago.com/ohare/home/pages/default.aspx"
-
-    airport_2 = self.new
-    airport_2.name = "Lake in the Hills"
-    airport_2.code = "3CK"
-    airport_2.distance = "19.87"
-    airport_2.url = "www.lakeinthehills.com"
+    display_list( airports )
 
     # maybe add link to actual runway numbers/length condition, etc...
     # it would be a Runway objects
     #airport_1.runway
-    [airport_1, airport_2]
+  end
+
+  def self.display_list( airports )
+
+    puts "These are near by:"
+    airports.each do |a|
+      puts "#{a[:number]}. #{a[:name]}(#{a[:code]}) is #{a[:distance]} miles away."
+      #  puts "#{v}"
+    end
+
   end
 
   def self.scrape_by_zipcode( url_with_zip )
@@ -69,13 +67,6 @@ class RunwayFinder::Airport
 
     puts airports
 
-    airports.each do |a|
-      a.each do |k,v|
-      #puts "#{number.v}. is #{distance.v} miles away from #{name.v}(#{code.v}.)"
-        puts "#{v}"
-      end
-    end
-
     #codeLink = doc.css(".loaddetails").text
 
     #distance = doc.css("div#list td")[2].text
@@ -84,32 +75,7 @@ class RunwayFinder::Airport
     # Site will display "Sorry, we could not find any suitable airports for this address!"
     #      if the zip code is not "valid"
 
-
-# SAMPLE
-#    doc = Nokogiri::HTML(html)
-#    rows = doc.xpath('//table/tbody[@id="threadbits_forum_251"]/tr')
-#    details = rows.collect do |row|
-#      detail = {}
-#      [
-#        [:title, 'td[3]/div[1]/a/text()'],
-#        [:name, 'td[3]/div[2]/span/a/text()'],
-#        [:date, 'td[4]/text()'],
-#        [:time, 'td[4]/span/text()'],
-#        [:number, 'td[5]/a/text()'],
-#        [:views, 'td[6]/text()'],
-#      ].each do |name, xpath|
-#        detail[name] = row.at_xpath(xpath).to_s.strip
-#      end
-#      detail
-#    end
-#    pp details
-
-    # => [{:time=>"23:35",
-    # =>   :title=>"Vb4 Gold Released",
-    # =>   :number=>"24",
-    # =>   :date=>"06 Jan 2010",
-    # =>   :views=>"1,320",
-    # =>   :name=>"Paul M"}]
+    airports
   end # scrape_by_zipcode
 
 
