@@ -14,6 +14,12 @@ class RunwayFinder::CLI
     puts "1. O'Hare"
     puts "2. Lake in the Hills"
     puts "3. Executive"
+
+    @airports = RunwayFinder::Airport.nearby
+    @airports.each.with_index(1) do |airport, i|
+      puts "#{i}. #{airport.name}  Code:#{airport.code} Distance:#{airport.distance}"
+    end
+
   end
 
   def menu
@@ -23,6 +29,7 @@ class RunwayFinder::CLI
       input = gets.strip
 
       if input != "exit"
+        # Check if input is 5 chars
         zip_code = input
         puts "Searching Zip Code:#{zip_code}"
         list_runways
