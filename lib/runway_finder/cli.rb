@@ -10,7 +10,7 @@ class RunwayFinder::CLI
 
   end
 
-  def list_runways( zip_code )
+  def build_list( zip_code )
     #puts "1. O'Hare"
     #puts "2. Lake in the Hills"
     #puts "3. Executive"
@@ -31,12 +31,15 @@ class RunwayFinder::CLI
       if input != "exit"
         # Check if input is 5 chars
         zip_code = input
-        puts "Searching Zip Code:#{zip_code}"
-        list_runways( zip_code )
+        build_list( zip_code )
 
-        puts "Enter the number of the airport you want to learn more about:"
-        input = gets.strip.downcase
-        puts "Showing more info for airport number #{input}"
+        puts "Enter the three character code (i.e. ORD) for the airport you want to learn more about:"
+        airportCode = gets.strip.upcase
+        if input != "exit"
+          RunwayFinder::Airport.show_details( airportCode )
+        end
+      else
+        goodbye
       end
     end
 
