@@ -3,10 +3,8 @@
 class RunwayFinder::CLI
 
   def call
-    puts "Hello Hickory"
-    #list_runways
+
     menu
-    goodbye
 
   end
 
