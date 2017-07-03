@@ -3,45 +3,49 @@
 class RunwayFinder::CLI
 
   def call
-
     menu
-
-  end
-
-  def build_list( zip_code )
-    #puts "1. O'Hare"
-    #puts "2. Lake in the Hills"
-    #puts "3. Executive"
-
-    @airports = RunwayFinder::Airport.nearby(zip_code)
-    #@airports.each.with_index(1) do |airport, i|
-    #  puts "#{i}. #{airport.name}  Code:#{airport.code} Distance:#{airport.distance}"
-    #end
-
   end
 
   def menu
+
     input = ""
     while input != "exit"
+
       puts "Please enter the zip code you would like to search for airports, or exit to quit:"
       input = gets.strip
+      # For future, check if input is a valid zipcode
 
       if input != "exit"
-        # Check if input is 5 chars
-        zip_code = input
-        build_list( zip_code )
 
-        puts "Enter the three character code (i.e. ORD) for the airport you want to learn more about:"
-        airportCode = gets.strip.upcase
-        if input != "exit"
-          RunwayFinder::Airport.show_details( airportCode )
+        RunwayFinder::Airport.find_airports_by_zipcode( input )
+
+        puts "Enter the three character code (i.e. ORD) for the airport you want to learn more about, or 'exit' to quit:"
+        detail_input = gets.strip.upcase
+        while detail_input != "exit" && detail_input != "EXIT"
+          # Make sure the code is one from the list
+          if RunwayFinder::Airport.check_code( detail_input )
+            RunwayFinder::Runway.find_runway_details( detail_input )
+            detail_input = "exit"
+          else
+            puts "******************************************************"
+            puts "Could not find details for airport code '#{detail_input}'."
+            puts "Please enter a code from the list."
+            puts "******************************************************"
+            RunwayFinder::Airport.display_airport_list
+            puts "Enter a three character code (i.e. ORD) from the list for the airport you want to learn more about, or 'exit' to quit:"
+            detail_input = gets.strip.upcase
+          end
         end
+
       else
         goodbye
       end
-    end
 
-  end
+      RunwayFinder::Airport.reset
+      RunwayFinder::Runway.reset
+    end # while
+
+  end # menu
 
   def goodbye
     puts"Thank you for using Runway Finder."
